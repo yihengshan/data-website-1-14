@@ -1,0 +1,143 @@
+﻿@using WebMatrix.Data
+@{
+    var db = Database.Open("Mushroom"); 
+    var families = db.Query("SELECT * FROM Family");
+    var colors = db.Query("SELECT * FROM Color");
+    var surfaces = db.Query("SELECT * FROM Surface");
+    var spacings = db.Query("SELECT * FROM GillSpacing");
+    var roots = db.Query("SELECT * FROM SteamRoot");
+    var seasons = db.Query("SELECT * FROM Seasons");
+    var shapes = db.Query("SELECT * FROM CapShape");
+    var habitats = db.Query("SELECT * FROM Habitat");
+    var veilTypes = db.Query("SELECT * FROM VeilType");
+    var ringTypes = db.Query("SELECT * FROM RingType");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="site.css">
+    <style>
+     
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+      
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Record Mushroom Information</h2>
+        <form method="post" action="/RecordMushroom">
+            <label for="family">Mushroom Family:</label>
+            <select id="family" name="family">
+                <option value="">-- Select Family --</option>
+                @foreach (var family in families)
+                {
+                    <option value="@family.FamilyID">@family.FamilyName</option>
+                }
+            </select>
+            <label for="color">Color:</label>
+            <select id="color" name="color">
+                <option value="">-- Select Color --</option>
+                @foreach (var color in colors)
+                {
+                    <option value="@color.ColorCode">@color.ColorName</option>
+                }
+            </select>
+            <label for="surface">Surface Name:</label>
+            <select id="surface" name="surface">
+                <option value="">-- Select Surface --</option>
+                @foreach (var surface in surfaces)
+                {
+                    <option value="@surface.SurfaceID">@surface.SurfaceName</option>
+                }
+            </select>
+            <label for="spacing">Gill Spacing:</label>
+            <select id="spacing" name="spacing">
+                <option value="">-- Select Gill Spacing --</option>
+                @foreach (var spacing in spacings)
+                {
+                    <option value="@spacing.SpacingCode">@spacing.SpacingName</option>
+                }
+            </select>
+            <label for="root">Stem Root:</label>
+            <select id="root" name="root">
+                <option value="">-- Select Stem Root --</option>
+                @foreach (var root in roots)
+                {
+                    <option value="@root.RootCode">@root.RootName</option>
+                }
+            </select>
+            <label for="season">Season:</label>  
+            <select id="season" name="season">
+                <option value="">-- Select Season --</option>
+                @foreach (var item in seasons)
+                {
+                    <option value="@item.SeasonID">@item.Season</option>
+                }
+            </select>
+            <label for="shape">Cap Shape:</label>
+            <select id="shape" name="shape">
+                <option value="">-- Select Cap Shape --</option>
+                @foreach (var item in shapes)
+                {
+                    <option value="@item.ShapeID">@item.ShapeName</option>
+                }
+            </select>
+            <label for="habitat">Habitat:</label>
+            <select id="habitat" name="habitat">
+                <option value="">-- Select Habitat --</option>
+                @foreach (var item in habitats)
+                {
+                    <option value="@item.HabitatCode">@item.HabitatName</option>
+                }
+            </select>
+            <label for="veil">Veil Type:</label>
+            <select id="veil" name="veil">
+                <option value="">-- Select Veil Type --</option>
+                @foreach (var item in veilTypes)
+                {
+                    <option value="@item.VeilTypeCode">@item.VeilType</option>
+                }
+            </select>
+            <label for="ring">Ring Type:</label>
+            <select id="ring" name="ring">
+                <option value="">-- Select Ring Type --</option>
+                @foreach (var item in ringTypes)
+                {
+                    <option value="@item.RingTypeCode">@item.RingType</option>
+                }
+            </select>
+            <label for="name">family Name:</label>
+            <input type="text" id="name" name="name" required>
+            <button type="submit">Submit</button>
+        </form>
+        <script>
+
+            document.getElementById('family').addEventListener('change', function () {
+                var newFamilyInput = document.getElementById('newFamilyInput');
+                var selectedValue = this.value;
+
+                if (selectedValue === 'add_new') {
+                    newFamilyInput.style.display = 'block';
+                } else {
+                    newFamilyInput.style.display = 'none';
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

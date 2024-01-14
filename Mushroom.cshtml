@@ -1,0 +1,70 @@
+﻿@using WebMatrix.Data
+@{
+    var db = Database.Open("Mushroom");
+    var familyId = Request.QueryString["familyId"];
+    var family = db.QuerySingle("SELECT * FROM Family WHERE FamilyID = @0", familyId);
+
+
+    var mushrooms = db.Query("SELECT * FROM Mushroom " +
+                             "JOIN Surface ON Mushroom.Cap_surface = Surface.SurfaceID " +
+                             "JOIN GillSpacing ON Mushroom.gillspacing = GillSpacing.SpacingCode " +
+                             "JOIN SteamRoot ON Mushroom.stemRoot = SteamRoot.RootCode " +
+                             "WHERE MushroomFamily = @0", familyId);
+
+    var averageDiameter = mushrooms.Average(m => (m.capDiameterMin + m.capDiameterMax) / 2);
+    var averageStemHeight = mushrooms.Average( m=>(m.stemHeightMin + m.stemHeightMax) / 2);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="site.css">
+    <style>
+       
+        .mushroom-details {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Mushrooms from Family @familyId</h2>
+
+        <div class="mushroom-details">
+            <p><strong>Family ID:</strong> @family.FamilyID</p>
+            <p><strong>Family Name:</strong> @family.FamilyName</p>
+           
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Cap Surface</th>
+                    <th>Gill Spacing</th>
+                    <th>Steam Root</th>
+                   
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var mushroom in mushrooms)
+                {
+                    <tr>
+                        <td>@mushroom.name</td>
+                        <td>@mushroom.SurfaceName</td>
+                        <td>@mushroom.SpacingName</td>
+                        <td>@mushroom.stemRoot</td>
+                      
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div>
+            <h3>Average Mushroom Characteristics</h3>
+            <p><strong>Average Diameter:</strong> @averageDiameter</p>
+            <p><strong>Average Stem Height:</strong> @averageStemHeight</p>
+        </div>
+    </div>
+</body>
+</html>
